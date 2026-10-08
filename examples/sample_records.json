@@ -1,0 +1,42 @@
+[
+  {
+    "id": "q1-baseline",
+    "question": "How long does light from the Sun take to reach Earth?",
+    "response": "Sunlight reaches Earth almost instantly, in just a fraction of a second.",
+    "context": "",
+    "key_facts": ["Sunlight takes about 8 minutes (roughly 8 minutes 20 seconds) to travel from the Sun to Earth."],
+    "config": "baseline",
+    "generator_model": "openai/gpt-4o"
+  },
+  {
+    "id": "q1-rag",
+    "question": "How long does light from the Sun take to reach Earth?",
+    "response": "Light from the Sun takes about 8 minutes and 20 seconds to reach Earth, because the Sun is roughly 150 million kilometers away and light travels at about 300,000 km/s.",
+    "context": "[doc_sun_distance] The Sun is about 150 million kilometers (1 astronomical unit) from Earth. Light travels at approximately 299,792 km/s, so sunlight takes about 8 minutes and 20 seconds to reach us.",
+    "key_facts": ["Sunlight takes about 8 minutes (roughly 8 minutes 20 seconds) to travel from the Sun to Earth."],
+    "config": "rag",
+    "generator_model": "openai/gpt-4o",
+    "retrieved_ids": ["doc_sun_distance", "doc_light_speed"],
+    "relevant_ids": ["doc_sun_distance"]
+  },
+  {
+    "id": "q2-baseline",
+    "question": "At what temperature does water boil at sea level?",
+    "response": "Water boils at exactly 90 degrees Celsius everywhere on Earth.",
+    "context": "",
+    "key_facts": ["Water boils at 100 degrees Celsius (212 degrees Fahrenheit) at sea level."],
+    "config": "baseline",
+    "generator_model": "openai/gpt-4o"
+  },
+  {
+    "id": "q2-rag",
+    "question": "At what temperature does water boil at sea level?",
+    "response": "At sea level, water boils at 100 degrees Celsius (212 degrees Fahrenheit). The boiling point drops at higher altitudes as air pressure decreases.",
+    "context": "[doc_boiling_point] At standard atmospheric pressure (sea level), water boils at 100 degrees Celsius, equivalent to 212 degrees Fahrenheit. Boiling point decreases with altitude.",
+    "key_facts": ["Water boils at 100 degrees Celsius (212 degrees Fahrenheit) at sea level."],
+    "config": "rag",
+    "generator_model": "openai/gpt-4o",
+    "retrieved_ids": ["doc_boiling_point"],
+    "relevant_ids": ["doc_boiling_point"]
+  }
+]

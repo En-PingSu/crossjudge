@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crossjudge"
+version = "0.1.0"
+description = "Honest, cross-family LLM-as-judge evaluation for RAG systems."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "En-Ping Su" }]
+keywords = ["rag", "evaluation", "llm-as-judge", "faithfulness", "retrieval", "openrouter"]
+dependencies = [
+    "openai>=1.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/En-PingSu/crossjudge"
+
+[tool.setuptools.packages.find]
+include = ["crossjudge*"]
