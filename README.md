@@ -1,5 +1,9 @@
 # CrossJudge
 
+[![CI](https://github.com/En-PingSu/crossjudge/actions/workflows/ci.yml/badge.svg)](https://github.com/En-PingSu/crossjudge/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue.svg)](pyproject.toml)
+
 **Honest, cross-family LLM-as-judge evaluation for RAG systems.**
 
 CrossJudge scores your RAG outputs on **faithfulness**, **relevancy**, and per-fact
