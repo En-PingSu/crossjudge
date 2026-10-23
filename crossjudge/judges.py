@@ -8,6 +8,8 @@ filter those out before aggregating.
 
 from __future__ import annotations
 
+import re
+
 from openai import OpenAI
 
 from .prompts import CORRECTNESS_PROMPT, FAITHFULNESS_PROMPT, RELEVANCY_PROMPT
@@ -25,25 +27,34 @@ def _complete(client: OpenAI, judge_model: str, prompt: str, max_tokens: int) ->
     return result.choices[0].message.content.strip()
 
 
+_VERDICT = re.compile(r"\s*(YES|NO)\b")
+
+
 def _parse_per_fact(text: str, key_facts: list[str]) -> tuple[int, list[dict]]:
-    """Parse ``FACT N: YES/NO`` lines into hits + per-fact judgments."""
+    """Parse ``FACT N: YES/NO`` lines into hits + per-fact judgments.
+
+    Only the first word after the colon is the verdict, so an explanation that
+    mentions "yes" cannot flip a NO. If a fact has several lines (for example an
+    echoed or injected one), it counts as present only when every line says YES.
+    """
+    lines = [line.strip() for line in text.splitlines()]
     hits = 0
     per_fact: list[dict] = []
     for i, fact in enumerate(key_facts):
-        found = False
-        for line in text.splitlines():
-            upper = line.strip().upper()
-            if upper.startswith(f"FACT {i + 1}:") or upper.startswith(f"FACT {i + 1} :"):
-                verdict = upper.split(":", 1)[1].split("—")[0].split("-")[0]
-                present = "YES" in verdict
-                per_fact.append({"fact": fact, "present": present, "judgment": line.strip()})
-                hits += int(present)
-                found = True
-                break
-        if not found:
+        prefixes = (f"FACT {i + 1}:", f"FACT {i + 1} :")
+        matches = [line for line in lines if line.upper().startswith(prefixes)]
+        if not matches:
             per_fact.append(
                 {"fact": fact, "present": False, "judgment": "(not found in judge output)"}
             )
+            continue
+        verdicts = []
+        for line in matches:
+            m = _VERDICT.match(line.upper().split(":", 1)[1])
+            verdicts.append(m.group(1) if m else None)
+        present = all(v == "YES" for v in verdicts)
+        per_fact.append({"fact": fact, "present": present, "judgment": " | ".join(matches)})
+        hits += int(present)
     return hits, per_fact
 
 

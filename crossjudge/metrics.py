@@ -36,7 +36,14 @@ def retrieval_metrics_for_query(
     hit = 1 if found else 0
     recall = len(found) / len(gt)
 
-    dcg = sum(1.0 / math.log2(rank + 1) for rank, rid in enumerate(retrieved, 1) if rid in gt)
+    # A relevant id earns gain only at its first rank; repeats count as non-relevant,
+    # so duplicates in the retrieved list can't push NDCG above 1.0.
+    dcg = 0.0
+    seen: set[str] = set()
+    for rank, rid in enumerate(retrieved, 1):
+        if rid in gt and rid not in seen:
+            dcg += 1.0 / math.log2(rank + 1)
+        seen.add(rid)
     ideal_k = min(len(gt), len(retrieved))
     idcg = sum(1.0 / math.log2(i + 1) for i in range(1, ideal_k + 1))
     ndcg = dcg / idcg if idcg > 0 else 0.0
